@@ -3,3 +3,7 @@
 - include your file in the ``EncounterStarting()``
 - make an ``Update()`` function in your encounter file
 - call ``UpdateEasings()`` every frame
+
+<h2>LICENSE</h2>
+- As long as you credit me somewhere, you are good
+- If you want to see the details, open up the LICENSE file
