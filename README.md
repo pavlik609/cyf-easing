@@ -1,9 +1,13 @@
-<h1>Create Your Frisk easing library</h1>
-<h2>HOW TO USE1</h2>
-- include your file in the ``EncounterStarting()``
-- make an ``Update()`` function in your encounter file
-- call ``UpdateEasings()`` every frame
+# Create Your Frisk easing library
+## HOW TO USE1
+- include your file in the `EncounterStarting()`
+- make an `Update()` function in your encounter file
+- call `UpdateEasings()` every frame
 
-<h2>LICENSE</h2>
+## LICENSE
 - As long as you credit me somewhere, you are good
 - If you want to see the details, open up the LICENSE file
+
+## EASINGS
+- All easings sourced from [easings.net](https://easings.net/)
+- Would recommend for finding the perfect easing
