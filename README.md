@@ -1,5 +1,5 @@
 # Create Your Frisk easing library
-## HOW TO USE1
+## HOW TO USE
 - include your file in the `EncounterStarting()`
 - make an `Update()` function in your encounter file
 - call `UpdateEasings()` every frame
