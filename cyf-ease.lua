@@ -9,6 +9,7 @@ IN_OUT_CIRC  = "InOutCirc" ,IN_CIRC  = "InCirc" ,OUT_CIRC  = "OutCirc" ,
 IN_OUT_BACK  = "InOutBack" ,IN_BACK  = "InBack" ,OUT_BACK  = "OutBack" ,
 IN_OUT_ELAST="InOutElastic",IN_ELAST="InElastic",OUT_ELAST="OutElastic",
 IN_OUT_BOUNCE="InOutBounce",IN_BOUNCE="InBounce",OUT_BOUNCE="OutBounce",}
+DIR_ENUM = {x = "x", y = "y", rot = "rotation"}
 backConst = 1.70158
 backConst2 = backConst + 1
 backConst3 = backConst * 1.525
@@ -17,12 +18,14 @@ elastConst2 = (2 * math.pi) / 4.5
 bounceConst = 7.5625
 bounceConst2 = 2.75
 -- [REFERENCE - input_move] [NUMBER - time] (in seconds) [NUMBER - end_value] for all of the functions
-function AddEasing(input_move,time,end_value,ease) 
+function AddEasing(input_move,time,end_value,ease,dir) 
     local easing = {}
     easing["time"] = time*60
     easing["time_orig"] = time*60
+    easing["dir"] = dir
     easing["input"] = input_move
-    easing["end_value"] = end_value
+    easing["start"] = stringToDir(dir,input_move)
+    easing["end_value"] = end_value - easing["start"]
     easing["ease"] = ease
     table.insert(easings,easing)
 end
@@ -171,12 +174,29 @@ function UpdateEasings()
             local real_t = math.abs(ease["time"]-ease["time_orig"])/ease["time_orig"]
             local fn_name = "Ease" .. ease["ease"]
             if _G[fn_name] ~= nil then
-                _G[ease["input"]].x = _G[fn_name](real_t)*ease["end_value"]
+		if ease["dir"] == "x" then
+		     _G[ease["input"]].x = ease["start"]+_G[fn_name](real_t)*ease["end_value"]		
+		elseif ease["dir"] == "y" then
+		     _G[ease["input"]].y = ease["start"]+_G[fn_name](real_t)*ease["end_value"]
+		else
+		     _G[ease["input"]].rotation = ease["start"]+_G[fn_name](real_t)*ease["end_value"]
+		end
             else
                 DEBUG("cyf-ease : Invalid easing type '" .. ease["ease"] .. "'")
             end
         else
             table.remove(easings,i)
         end
+    end
+end
+function stringToDir(string, obj)
+    if string == DIR_ENUM.x then
+	    return _G[obj].x
+    elseif string == DIR_ENUM.y then
+	    return _G[obj].y
+    elseif string == DIR_ENUM.rot then
+	    return _G[obj].rotation
+    else
+	    DEBUG("cyf-ease : Invalid direction '".. string .."'")
     end
 end
