@@ -9,7 +9,7 @@ IN_OUT_CIRC  = "InOutCirc" ,IN_CIRC  = "InCirc" ,OUT_CIRC  = "OutCirc" ,
 IN_OUT_BACK  = "InOutBack" ,IN_BACK  = "InBack" ,OUT_BACK  = "OutBack" ,
 IN_OUT_ELAST="InOutElastic",IN_ELAST="InElastic",OUT_ELAST="OutElastic",
 IN_OUT_BOUNCE="InOutBounce",IN_BOUNCE="InBounce",OUT_BOUNCE="OutBounce",}
-DIR_ENUM = {x = "x", y = "y", rot = "rotation"}
+EASE_MODE_ENUM = {x = "X", y = "Y", rot = "Rotation", alph = "Alpha", xscl = "ScaleX", yscl = "ScaleY"}
 backConst = 1.70158
 backConst2 = backConst + 1
 backConst3 = backConst * 1.525
@@ -174,13 +174,11 @@ function UpdateEasings()
             local real_t = math.abs(ease["time"]-ease["time_orig"])/ease["time_orig"]
             local fn_name = "Ease" .. ease["ease"]
             if _G[fn_name] ~= nil then
-		if ease["dir"] == "x" then
-		     _G[ease["input"]].x = ease["start"]+_G[fn_name](real_t)*ease["end_value"]		
-		elseif ease["dir"] == "y" then
-		     _G[ease["input"]].y = ease["start"]+_G[fn_name](real_t)*ease["end_value"]
-		else
-		     _G[ease["input"]].rotation = ease["start"]+_G[fn_name](real_t)*ease["end_value"]
-		end
+                if _G["EaseMode" .. ease["dir"]] ~= nil then
+                    _G["EaseMode" .. ease["dir"]](ease["input"],ease["start"]+_G[fn_name](real_t)*ease["end_value"])
+                else
+                    DEBUG("cyf-ease : Function named 'EaseMode" .. ease["dir"] .. "' does not exist")
+                end
             else
                 DEBUG("cyf-ease : Invalid easing type '" .. ease["ease"] .. "'")
             end
@@ -190,13 +188,47 @@ function UpdateEasings()
     end
 end
 function stringToDir(string, obj)
-    if string == DIR_ENUM.x then
+    if string == EASE_MODE_ENUM.x then
 	    return _G[obj].x
-    elseif string == DIR_ENUM.y then
+    elseif string == EASE_MODE_ENUM.y then
 	    return _G[obj].y
-    elseif string == DIR_ENUM.rot then
+    elseif string == EASE_MODE_ENUM.rot then
 	    return _G[obj].rotation
+    elseif string == EASE_MODE_ENUM.alph then
+	    return _G[obj].alpha
+    elseif string == EASE_MODE_ENUM.xscl then
+	    return _G[obj].xscale
+    elseif string == EASE_MODE_ENUM.yscl then
+	    return _G[obj].yscale
+    elseif _G["stringToDir" .. obj] ~= nil then
+        return _G["stringToDir" .. obj]
     else
 	    DEBUG("cyf-ease : Invalid direction '".. string .."'")
+        return 1
     end
+end
+
+
+function EaseModeX(inp,val)
+    _G[inp].x = val
+end
+
+function EaseModeY(inp,val)
+    _G[inp].y = val
+end
+
+function EaseModeRotation(inp,val)
+    _G[inp].rotation = val
+end
+
+function EaseModeAlpha(inp,val)
+    _G[inp].alpha = val
+end
+
+function EaseModeScaleX(inp,val)
+    _G[inp].xscale = val
+end
+
+function EaseModeScaleY(inp,val)
+    _G[inp].yscale = val
 end
