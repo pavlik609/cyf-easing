@@ -5,7 +5,7 @@
 - call `UpdateEasings()` every frame
 
 ## LICENSE
-- As long as you credit me somewhere, you are good
+- Credit would be appreciated, but you dont need to
 - If you want to see the details, open up the LICENSE file
 
 ## EASINGS
